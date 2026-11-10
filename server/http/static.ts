@@ -81,8 +81,8 @@ export function createStaticHandler(distDir: string): (req: IncomingMessage, res
       ETag: etag,
       'Last-Modified': new Date(st.mtimeMs).toUTCString(),
       'X-Content-Type-Options': 'nosniff',
-      // A página não deve ser embutida em sites de terceiros (clickjacking nas configurações).
-      'X-Frame-Options': 'DENY',
+      // Permite embutir em iframe pelo QG / Cockpit ou pela mesma máquina.
+      'X-Frame-Options': process.env.HABBLAUD_ALLOW_IFRAME === '1' ? 'SAMEORIGIN' : 'DENY',
       'Referrer-Policy': 'no-referrer',
     };
     if (isNotModified(req, etag, st.mtimeMs)) {
